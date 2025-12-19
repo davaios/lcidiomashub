@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import type { User, Session } from "@supabase/supabase-js";
-import { supabase } from "@/lib/supabase";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 import type { Profile, UserRole } from "@/types/database";
 
 interface AuthContextType {
@@ -15,6 +15,7 @@ interface AuthContextType {
   updateProfile: (updates: Partial<Profile>) => Promise<{ error: Error | null }>;
   isAdmin: boolean;
   isSuperAdmin: boolean;
+  isConfigured: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -26,26 +27,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   const fetchProfile = async (userId: string) => {
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", userId)
-      .single();
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", userId)
+        .single();
 
-    if (error) {
-      console.error("Error fetching profile:", error);
+      if (error) {
+        console.error("Error fetching profile:", error);
+        return null;
+      }
+      return data as Profile;
+    } catch (err) {
+      console.error("Error fetching profile:", err);
       return null;
     }
-    return data as Profile;
   };
 
   useEffect(() => {
+    if (!isSupabaseConfigured) {
+      setLoading(false);
+      return;
+    }
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
         fetchProfile(session.user.id).then(setProfile);
       }
+      setLoading(false);
+    }).catch((err) => {
+      console.error("Error getting session:", err);
       setLoading(false);
     });
 
@@ -67,6 +81,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signIn = async (email: string, password: string) => {
+    if (!isSupabaseConfigured) {
+      return { error: new Error("Supabase not configured") };
+    }
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -75,6 +92,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signUp = async (email: string, password: string, fullName: string) => {
+    if (!isSupabaseConfigured) {
+      return { error: new Error("Supabase not configured") };
+    }
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -98,6 +118,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signOut = async () => {
+    if (!isSupabaseConfigured) return;
     await supabase.auth.signOut();
     setUser(null);
     setProfile(null);
@@ -105,6 +126,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const resetPassword = async (email: string) => {
+    if (!isSupabaseConfigured) {
+      return { error: new Error("Supabase not configured") };
+    }
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/reset-password`,
     });
@@ -112,6 +136,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const updateProfile = async (updates: Partial<Profile>) => {
+    if (!isSupabaseConfigured) {
+      return { error: new Error("Supabase not configured") };
+    }
     if (!user) return { error: new Error("No user logged in") };
 
     const { error } = await supabase
@@ -141,6 +168,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     updateProfile,
     isAdmin,
     isSuperAdmin,
+    isConfigured: isSupabaseConfigured,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
