@@ -11,6 +11,7 @@ import { CoursesPage, CourseDetailPage, ExamPage, ResultsPage } from "@/pages/co
 import { DashboardPage } from "@/pages/dashboard";
 import { ChatPage } from "@/pages/chat";
 import { SettingsPage } from "@/pages/settings";
+import { ProcessMapPage } from "@/pages/mapping";
 
 // Admin pages
 import { AdminCoursesPage, CourseEditorPage, AdminDashboardPage, UsersPage } from "@/pages/admin";
@@ -36,6 +37,7 @@ function App() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/chat" element={<ChatPage />} />
             <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/mapping" element={<ProcessMapPage />} />
 
             {/* Admin routes */}
             <Route element={<AdminLayout />}>

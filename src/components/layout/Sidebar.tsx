@@ -8,6 +8,7 @@ import {
   LogOut,
   ChevronDown,
   X,
+  Network,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -30,6 +31,7 @@ const navigation = [
   { name: "Mis Cursos", href: "/courses", icon: BookOpen, roles: ["guest", "admin", "super_admin"] },
   { name: "Mi Evolución", href: "/dashboard", icon: BarChart3, roles: ["guest", "admin", "super_admin"] },
   { name: "Chat", href: "/chat", icon: MessageSquare, roles: ["guest", "admin", "super_admin"] },
+  { name: "Mapeado", href: "/mapping", icon: Network, roles: ["admin", "super_admin"] },
   { name: "Configuración", href: "/settings", icon: Settings, roles: ["admin", "super_admin"] },
   { name: "Gestión Usuarios", href: "/admin/users", icon: Users, roles: ["admin", "super_admin"] },
 ];
