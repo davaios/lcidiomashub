@@ -107,59 +107,77 @@ export interface MessageReaction {
   created_at: string;
 }
 
-export interface Database {
+// Supabase Database type definition
+export type Database = {
   public: {
     Tables: {
       profiles: {
         Row: Profile;
-        Insert: Omit<Profile, "created_at" | "updated_at">;
-        Update: Partial<Omit<Profile, "id">>;
+        Insert: Partial<Profile> & { id: string; full_name: string; role: UserRole; department: Department };
+        Update: Partial<Profile>;
+        Relationships: [];
       };
       courses: {
         Row: Course;
-        Insert: Omit<Course, "id" | "created_at" | "updated_at">;
-        Update: Partial<Omit<Course, "id">>;
+        Insert: Partial<Course> & { title: string; description: string; created_by: string };
+        Update: Partial<Course>;
+        Relationships: [];
       };
       lessons: {
         Row: Lesson;
-        Insert: Omit<Lesson, "id" | "created_at">;
-        Update: Partial<Omit<Lesson, "id">>;
+        Insert: Partial<Lesson> & { course_id: string; title: string; video_url: string; order_index: number };
+        Update: Partial<Lesson>;
+        Relationships: [];
       };
       quiz_questions: {
         Row: QuizQuestion;
-        Insert: Omit<QuizQuestion, "id">;
-        Update: Partial<Omit<QuizQuestion, "id">>;
+        Insert: Partial<QuizQuestion> & { course_id: string; question_text: string; options: string[]; correct_answer_index: number; order_index: number };
+        Update: Partial<QuizQuestion>;
+        Relationships: [];
       };
       user_progress: {
         Row: UserProgress;
-        Insert: Omit<UserProgress, "id">;
-        Update: Partial<Omit<UserProgress, "id">>;
+        Insert: Partial<UserProgress> & { user_id: string; lesson_id: string };
+        Update: Partial<UserProgress>;
+        Relationships: [];
       };
       quiz_attempts: {
         Row: QuizAttempt;
-        Insert: Omit<QuizAttempt, "id">;
-        Update: Partial<Omit<QuizAttempt, "id">>;
+        Insert: Partial<QuizAttempt> & { user_id: string; course_id: string; score: number; passed: boolean; answers: Record<string, number> };
+        Update: Partial<QuizAttempt>;
+        Relationships: [];
       };
       certificates: {
         Row: Certificate;
-        Insert: Omit<Certificate, "id">;
-        Update: Partial<Omit<Certificate, "id">>;
+        Insert: Partial<Certificate> & { user_id: string; course_id: string; certificate_url: string };
+        Update: Partial<Certificate>;
+        Relationships: [];
       };
       chat_channels: {
         Row: ChatChannel;
-        Insert: Omit<ChatChannel, "id" | "created_at">;
-        Update: Partial<Omit<ChatChannel, "id">>;
+        Insert: Partial<ChatChannel> & { name: string; slug: string };
+        Update: Partial<ChatChannel>;
+        Relationships: [];
       };
       chat_messages: {
         Row: ChatMessage;
-        Insert: Omit<ChatMessage, "id" | "created_at" | "updated_at">;
-        Update: Partial<Omit<ChatMessage, "id">>;
+        Insert: Partial<ChatMessage> & { channel_id: string; user_id: string; content: string };
+        Update: Partial<ChatMessage>;
+        Relationships: [];
       };
       message_reactions: {
         Row: MessageReaction;
-        Insert: Omit<MessageReaction, "id" | "created_at">;
-        Update: Partial<Omit<MessageReaction, "id">>;
+        Insert: Partial<MessageReaction> & { message_id: string; user_id: string; emoji: string };
+        Update: Partial<MessageReaction>;
+        Relationships: [];
       };
     };
+    Views: Record<string, never>;
+    Functions: Record<string, never>;
+    Enums: {
+      user_role: UserRole;
+      department: Department;
+    };
+    CompositeTypes: Record<string, never>;
   };
-}
+};

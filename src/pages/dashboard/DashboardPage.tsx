@@ -15,7 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDate } from "@/lib/utils";
-import type { Course, Certificate, QuizAttempt } from "@/types/database";
+import type { Course, Certificate } from "@/types/database";
 
 interface DashboardStats {
   completedCourses: number;
