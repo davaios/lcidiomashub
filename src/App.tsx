@@ -4,7 +4,7 @@ import { MainLayout, AuthLayout, AdminLayout } from "@/components/layout";
 import { Toaster } from "@/components/ui/toaster";
 
 // Auth pages
-import { LoginPage, ForgotPasswordPage } from "@/pages/auth";
+import { LoginPage, RegisterPage, ForgotPasswordPage } from "@/pages/auth";
 
 // Main pages
 import { CoursesPage, CourseDetailPage, ExamPage, ResultsPage } from "@/pages/courses";
@@ -24,6 +24,7 @@ function App() {
           {/* Auth routes */}
           <Route element={<AuthLayout />}>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           </Route>
 

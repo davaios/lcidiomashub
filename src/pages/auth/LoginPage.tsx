@@ -93,6 +93,13 @@ export function LoginPage() {
               ¿Olvidaste tu contraseña?
             </Link>
           </div>
+
+          <div className="text-center text-sm text-gray-600">
+            ¿No tienes cuenta?{" "}
+            <Link to="/register" className="text-primary hover:underline font-medium">
+              Regístrate
+            </Link>
+          </div>
         </form>
       </CardContent>
     </Card>
